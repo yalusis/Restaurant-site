@@ -1,18 +1,32 @@
-import React, { useState } from 'react'
-import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem} from 'reactstrap';
+import React, {  useState } from 'react'
+import { Navbar, NavbarBrand, Nav, NavbarToggler, Collapse, NavItem,Button, Modal, ModalHeader, ModalBody,
+    Form, FormGroup, Input, Label } from 'reactstrap';
 import { NavLink } from 'react-router-dom';
 
 const Header = () => {
 
-let [isNavOpen, set_isNavOpen] = useState(false);
+const [state, set_State] = useState({isNavOpen: false, isModalOpen: false});
+
+function setModal() {
+    set_State({...state, isModalOpen: !state.isModalOpen})
+}
+
+function handleLogin(event) {
+    event.preventDefault();
+    const username = document.querySelector('#username').value;
+    const password = document.querySelector("#password").value;
+    const remember = document.querySelector('[name="remember"]').checked;
+    alert("Username: " + username+ " Password: " + password + " Remember: " + remember);
+    setModal();
+}
 
     return(
       <div>
       <Navbar dark expand="md">
           <div className="container">
-              <NavbarToggler onClick={() => set_isNavOpen(!isNavOpen) }/>
+              <NavbarToggler onClick={() => set_State({...state, isNavOpen: !state.isNavOpen}) }/>
               <NavbarBrand className="mr-auto" href="/"><img src='assets/images/logo.png' height="30" width="41" alt='Ristorante Con Fusion' /></NavbarBrand>
-              <Collapse isOpen={isNavOpen} navbar>
+              <Collapse isOpen={state.isNavOpen} navbar>
                   <Nav navbar>
                   <NavItem>
                       <NavLink className="nav-link"  to='/home'><span className="fa fa-home fa-lg"></span> Home</NavLink>
@@ -27,6 +41,11 @@ let [isNavOpen, set_isNavOpen] = useState(false);
                       <NavLink className="nav-link" to='/contactus'><span className="fa fa-address-card fa-lg"></span> Contact Us</NavLink>
                   </NavItem>
                   </Nav>
+                  <Nav className="ml-auto" navbar>
+                        <NavItem>
+                            <Button outline onClick={setModal}><span className="fa fa-sign-in fa-lg"></span> Login</Button>
+                        </NavItem>
+                  </Nav>
               </Collapse>
           </div>
       </Navbar>
@@ -40,6 +59,29 @@ let [isNavOpen, set_isNavOpen] = useState(false);
               </div>
           </div>
       </div>
+      <Modal isOpen={state.isModalOpen} toggle={setModal}>
+                    <ModalHeader toggle={setModal}>Login</ModalHeader>
+                    <ModalBody>
+                    <Form onSubmit={handleLogin}>
+                            <FormGroup>
+                                <Label htmlFor="username">Username</Label>
+                                <Input type="text" id="username" name="username" />
+                            </FormGroup>
+                            <FormGroup>
+                                <Label htmlFor="password">Password</Label>
+                                <Input type="password" id="password" name="password" />
+                            </FormGroup>
+                            <FormGroup check>
+                                <Label check>
+                                    <Input type="checkbox" name="remember"
+                                      />
+                                    Remember me
+                                </Label>
+                            </FormGroup>
+                            <Button type="submit" value="submit" color="primary" >Login</Button>
+                        </Form>
+                    </ModalBody>
+                </Modal>
   </div>
     );
   }
