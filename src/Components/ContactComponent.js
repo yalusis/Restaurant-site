@@ -1,24 +1,40 @@
-import { Breadcrumb, BreadcrumbItem, Button, Form, FormGroup, Label, Input, Col,  FormFeedback } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Button,  Col, Label, Form, FormGroup, Input, FormFeedback } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
-
-
+import { useDispatch, useSelector } from 'react-redux';
+import { addFirstName, addLastName, addTelNum, addEmail, addAgree, addContactType, addMessage } from '../redux/ActionCreators'
 
 const Contact = () => {
 
-    const [state, setState] = useState({ firstname: '', lastname: '', telnum: '', email: '' , agree: false, contactType: 'Tel.', message: ''})
-    const [touched, setTouched] = useState({ firstname: false, lastname: false, telnum: false, email: false})
+    const [touched, setTouched] = useState({ firstname: false, lastname: false, telnum: false, email: false});
+    const dispatch = useDispatch()
+    const store = useSelector((store) => store)
 
     function handleInputChange(event) { 
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
 
-        setState({ ...state, [target.name]: value});
+        if(target.name === 'firstname') {
+           dispatch(addFirstName(value))
+        } else if (target.name === 'lastname') {
+            dispatch(addLastName(value))
+        } else if (target.name === 'telnum') {
+            dispatch(addTelNum(value))
+        } else if (target.name === 'email') {
+            dispatch(addEmail(value))
+        } else if (target.name === 'agree') {
+            dispatch(addAgree(value))
+        } else if (target.name === 'contactType') {
+            dispatch(addContactType(value))
+        } else if (target.name === 'message') {
+            dispatch(addMessage(value))
+        }
+
     }
 
     function handleSubmit(event) {
-        console.log('Current State is: ' + JSON.stringify(state));
-        alert('Current State is: ' + JSON.stringify(state));
+        console.log('Current State is: ' + JSON.stringify(store.feedback));
+        alert('Current State is: ' + JSON.stringify(store.feedback));
         event.preventDefault();
     }
 
@@ -59,7 +75,7 @@ const Contact = () => {
         return errors;
     }
 
-    const errors = validate(state.firstname, state.lastname, state.telnum, state.email);
+    const errors = validate(store.feedback.firstname, store.feedback.lastname, store.feedback.telnum, store.feedback.email);
 
     return(
         <div className="container">
@@ -110,8 +126,7 @@ const Contact = () => {
                                 <Col md={10}>
                                     <Input type="text" id="firstname" name="firstname"
                                         placeholder="First Name"
-                                        value={state.firstname}
-                                        valid={errors.firstname === ''}
+                                        value={store.feedback.firstname}
                                         invalid={errors.firstname !== ''}
                                         onBlur={ handleBlurd }
                                         onChange={handleInputChange} />
@@ -123,8 +138,7 @@ const Contact = () => {
                                 <Col md={10}>
                                     <Input type="text" id="lastname" name="lastname"
                                         placeholder="Last Name"
-                                        value={state.lastname}
-                                        valid={errors.lastname === ''}
+                                        value={store.feedback.lastname}
                                         invalid={errors.lastname !== ''}
                                         onBlur={handleBlurd}
                                         onChange={handleInputChange} />
@@ -136,8 +150,7 @@ const Contact = () => {
                                 <Col md={10}>
                                     <Input type="tel" id="telnum" name="telnum"
                                         placeholder="Tel. number"
-                                        value={state.telnum}
-                                        valid={errors.telnum === ''}
+                                        value={store.feedback.telnum}
                                         invalid={errors.telnum !== ''}
                                         onBlur={handleBlurd}
                                         onChange={handleInputChange} />
@@ -149,8 +162,7 @@ const Contact = () => {
                                 <Col md={10}>
                                     <Input type="email" id="email" name="email"
                                         placeholder="Email"
-                                        value={state.email}
-                                        valid={errors.email === ''}
+                                        value={store.feedback.email}
                                         invalid={errors.email !== ''}
                                         onBlur={handleBlurd}
                                         onChange={handleInputChange} />
@@ -163,7 +175,7 @@ const Contact = () => {
                                         <Label check>
                                             <Input type="checkbox"
                                                 name="agree"
-                                                checked={state.agree}
+                                                checked={store.feedback.agree}
                                                 onChange={handleInputChange} /> {' '}
                                             <strong>May we contact you?</strong>
                                         </Label>
@@ -171,7 +183,7 @@ const Contact = () => {
                                 </Col>
                                 <Col md={{size: 3, offset: 1}}>
                                     <Input type="select" name="contactType"
-                                            value={state.contactType}
+                                            value={store.feedback.contactType}
                                             onChange={handleInputChange}>
                                         <option>Tel.</option>
                                         <option>Email</option>
@@ -183,7 +195,7 @@ const Contact = () => {
                                 <Col md={10}>
                                     <Input type="textarea" id="message" name="message"
                                         rows="12"
-                                        value={state.message}
+                                        value={store.feedback.message}
                                         onChange={handleInputChange}></Input>
                                 </Col>
                             </FormGroup>

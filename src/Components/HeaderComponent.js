@@ -41,7 +41,7 @@ function handleLogin(event) {
                       <NavLink className="nav-link" to='/contactus'><span className="fa fa-address-card fa-lg"></span> Contact Us</NavLink>
                   </NavItem>
                   </Nav>
-                  <Nav className="ml-auto" navbar>
+                  <Nav className="login" navbar>
                         <NavItem>
                             <Button outline onClick={setModal}><span className="fa fa-sign-in fa-lg"></span> Login</Button>
                         </NavItem>

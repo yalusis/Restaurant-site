@@ -45,3 +45,12 @@ address{
   .digitText {
     line-height: 3;
   }
+
+  .select {
+    width: 29em;
+    height: 2.4em;
+  }
+
+  .login {
+    margin-left: 51em;
+  }

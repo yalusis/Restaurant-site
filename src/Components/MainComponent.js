@@ -6,18 +6,34 @@ import About from './AboutComponent';
 import DishDetail from './DishdetailComponent';
 import Contact from './ContactComponent';
 import { Routes, Route, Navigate, useParams} from 'react-router-dom';
-import { useSelector } from 'react-redux';
+import { useDispatch, useSelector} from 'react-redux';
+import { FetchDishes, fetchComments, fetchPromos } from '../redux/ActionCreators';
+import { useEffect } from 'react';
 
 const Main = () => {
+const state = useSelector((state) => state);
+const dispatch = useDispatch()
 
-const state = useSelector((state) => state)
+useEffect(() => {
+  dispatch(FetchDishes());
+  dispatch(fetchComments());
+  dispatch(fetchPromos());
+}, [])
+
+console.log(state)
 
 const DishWithId = () => {
   const { dishId } = useParams();
-  const Dish = state.dishes.filter((dish) => dish.id == dishId)
-  const selectComments = state.comments.filter((comment) => comment.dishId == dishId)
+  const Dish = state.dishes.dishes.filter((dish) => dish.id === Number(dishId))
+  const selectComments = state.comments.comments.filter((comment) => comment.dishId === Number(dishId))
   return(
-      <DishDetail dish={Dish} comments={selectComments} />
+      <DishDetail dish={Dish} 
+      isLoading={state.dishes.isLoading}
+      errMess={state.dishes.errMess}
+      comments={selectComments} 
+      commentsErrMess={state.comments.errMess}
+      addComment={state.addComment}
+      dishId={dishId} />
   );
 };
 
@@ -26,11 +42,17 @@ const DishWithId = () => {
         <Header />                         
           <Routes>
             <Route path='/home'  element={ <Home 
-              dish={state.dishes.filter((dish) => dish.featured)[0]}
-              promotion={state.promotions.filter((promo) => promo.featured)[0]}
+              dish={state.dishes.dishes.filter((dish) => dish.featured)[0]}
+              dishesLoading={state.dishes.isLoading}
+              dishesErrMess={state.dishes.errMess}
+              promotion={state.promotions.promotions.filter((promo) => promo.featured)[0]}
+              promoLoading={state.promotions.isLoading}
+              promoErrMess={state.promotions.errMess}
               leader={state.leaders.filter((leader) => leader.featured)[0]} /> } />
             <Route exact path='/aboutus' element={<About leaders={state.leaders} />} />
-            <Route exact path='/menu' element={<Menu dishes={state.dishes} />} />
+            <Route exact path='/menu' element={<Menu dishes={state.dishes} 
+            dishesLoading={state.dishes.isLoading}
+            dishesErrMess={state.dishes.errMess}/>} />
             <Route path='/menu/:dishId' element={<DishWithId />} />
             <Route exact path='/contactus' element={<Contact />} />
             <Route path='*'  element={ <Navigate to="/home" replace/> } />
