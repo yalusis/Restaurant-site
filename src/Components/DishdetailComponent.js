@@ -3,11 +3,12 @@ import { Card, CardImg, CardText, CardBody,CardTitle, Breadcrumb, BreadcrumbItem
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch } from 'react-redux';
-import { addComment} from '../redux/ActionCreators';
+import { postComment } from '../redux/ActionCreators';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../baseUrl';
 
 const Dishdetail = (props) => {
+    
 
     function renderDishes(dish) {
             return(
@@ -103,7 +104,7 @@ const CommentForm = (props) => {
     function handleLogin(event) {
         event.preventDefault();
         const dishId = Number(props.dishId);
-        dispatch(addComment(dishId, state.rating, state.name, state.comment))
+        dispatch(postComment(dishId, state.rating, state.name, state.comment))
         setModal();
     }
 

@@ -2,6 +2,7 @@ import { Breadcrumb, BreadcrumbItem, Button,  Col, Label, Form, FormGroup, Input
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { postFeedback } from '../redux/ActionCreators';
 import { addFirstName, addLastName, addTelNum, addEmail, addAgree, addContactType, addMessage } from '../redux/ActionCreators'
 
 const Contact = () => {
@@ -33,8 +34,7 @@ const Contact = () => {
     }
 
     function handleSubmit(event) {
-        console.log('Current State is: ' + JSON.stringify(store.feedback));
-        alert('Current State is: ' + JSON.stringify(store.feedback));
+        dispatch(postFeedback(store.feedback.firstname, store.feedback.lastname, store.feedback.telnum, store.feedback.email, store.feedback.agree, store.feedback.contactType, store.feedback.message))
         event.preventDefault();
     }
 
